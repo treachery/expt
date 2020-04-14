@@ -7,11 +7,11 @@ import (
 )
 
 func Test_parseSpec(t *testing.T) {
-	fmt.Println(parseSpec("1-10"))
-	fmt.Println(parseSpec("0-0"))
-	fmt.Println(parseSpec("99-100"))
-	fmt.Println(parseSpec("dff"))
-	fmt.Println(parseSpec("10-8"))
+	fmt.Println(parseModSpec("1-10"))
+	fmt.Println(parseModSpec("0-0"))
+	fmt.Println(parseModSpec("99-100"))
+	fmt.Println(parseModSpec("dff"))
+	fmt.Println(parseModSpec("10-8"))
 }
 
 func Test_layer(t *testing.T) {

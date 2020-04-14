@@ -2,6 +2,7 @@
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/treachery/expt"
@@ -30,7 +31,16 @@ func initExpts() {
 		"50-99": 2,
 	})
 	for i := 1; i <= 7; i++ {
-		expts[uint32(i)] = expt.NewExpt(uint32(i), []uint32{1, 2}, hashTrafficer)
+		e := expt.NewExpt(uint32(i), []uint32{1, 2}, hashTrafficer)
+
+		// 这里是为了测试是实验的序列化，方便存储到redis等
+		bs, _ := json.Marshal(e)
+		fmt.Println(string(bs))
+		if err := json.Unmarshal(bs, e); err != nil {
+			panic(err)
+		}
+		fmt.Println(e)
+		expts[uint32(i)] = e
 	}
 }
 
@@ -86,7 +96,7 @@ var spec = `{
 
 func main() {
 	initExpts()
-	root, err := expt.ReadFromSPEC(spec)
+	root, err := expt.NewLayerFromSPEC(spec)
 	if err != nil {
 		panic(err)
 	}

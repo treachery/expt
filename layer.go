@@ -19,7 +19,7 @@ type Layer struct {
 	modIdToChildLayers   map[uint32][]*Layer
 }
 
-func ReadFromSPEC(spec string) (*Layer, error) {
+func NewLayerFromSPEC(spec string) (*Layer, error) {
 	l := &Layer{}
 	if err := json.Unmarshal([]byte(spec), l); err != nil {
 		return nil, errors.Wrapf(err, "spec(%s)", spec)
