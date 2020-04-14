@@ -13,10 +13,11 @@ type Expt struct {
 	trafficer Trafficer
 }
 
-func NewExpt(id uint32, vids []uint32, opts ...func(e *Expt)) *Expt {
+func NewExpt(id uint32, vids []uint32, trafficer Trafficer, opts ...func(e *Expt)) *Expt {
 	e := &Expt{
 		Id:         id,
 		VersionIds: vids,
+		trafficer:  trafficer,
 	}
 	for _, o := range opts {
 		o(e)

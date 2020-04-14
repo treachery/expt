@@ -25,41 +25,13 @@ var expts map[uint32]*expt.Expt
 
 func initExpts() {
 	expts = make(map[uint32]*expt.Expt)
-	expts[1] = expt.NewExpt(1, []uint32{1, 2},
-		expt.WithTrafficer(expt.MustNewHashTrafficer("prefix_", map[string]uint32{
-			"0-49":  1,
-			"50-99": 2,
-		})))
-	expts[2] = expt.NewExpt(2, []uint32{1, 2},
-		expt.WithTrafficer(expt.MustNewHashTrafficer("prefix_", map[string]uint32{
-			"0-49":  1,
-			"50-99": 2,
-		})))
-	expts[3] = expt.NewExpt(3, []uint32{1, 2},
-		expt.WithTrafficer(expt.MustNewHashTrafficer("prefix_", map[string]uint32{
-			"0-49":  1,
-			"50-99": 2,
-		})))
-	expts[4] = expt.NewExpt(4, []uint32{1, 2},
-		expt.WithTrafficer(expt.MustNewHashTrafficer("prefix_", map[string]uint32{
-			"0-49":  1,
-			"50-99": 2,
-		})))
-	expts[5] = expt.NewExpt(5, []uint32{1, 2},
-		expt.WithTrafficer(expt.MustNewHashTrafficer("prefix_", map[string]uint32{
-			"0-49":  1,
-			"50-99": 2,
-		})))
-	expts[6] = expt.NewExpt(6, []uint32{1, 2},
-		expt.WithTrafficer(expt.MustNewHashTrafficer("prefix_", map[string]uint32{
-			"0-49":  1,
-			"50-99": 2,
-		})))
-	expts[7] = expt.NewExpt(7, []uint32{1, 2},
-		expt.WithTrafficer(expt.MustNewHashTrafficer("prefix_", map[string]uint32{
-			"0-49":  1,
-			"50-99": 2,
-		})))
+	hashTrafficer := expt.MustNewHashTrafficer("prefix_", map[string]uint32{
+		"0-49":  1,
+		"50-99": 2,
+	})
+	for i := 1; i <= 7; i++ {
+		expts[uint32(i)] = expt.NewExpt(uint32(i), []uint32{1, 2}, hashTrafficer)
+	}
 }
 
 var spec = `{
