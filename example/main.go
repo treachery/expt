@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/treachery/expt"
 )
 
@@ -26,7 +28,8 @@ var expts map[uint32]*expt.Expt
 
 func initExpts() {
 	expts = make(map[uint32]*expt.Expt)
-	hashTrafficer := expt.MustNewHashTrafficer("prefix_", map[string]uint32{
+	prefix := fmt.Sprint(time.Now())
+	hashTrafficer := expt.MustNewHashTrafficer(prefix, map[string]uint32{
 		"0-49":  1,
 		"50-99": 2,
 	})
@@ -35,11 +38,9 @@ func initExpts() {
 
 		// 这里是为了测试是实验的序列化，方便存储到redis等
 		bs, _ := json.Marshal(e)
-		fmt.Println(string(bs))
 		if err := json.Unmarshal(bs, e); err != nil {
 			panic(err)
 		}
-		fmt.Println(e)
 		expts[uint32(i)] = e
 	}
 }
@@ -101,7 +102,8 @@ func main() {
 		panic(err)
 	}
 
-	for i := 1; i < 100; i++ {
+	mstat := make(map[string]int)
+	for i := 1; i < 1000000; i++ {
 		key := fmt.Sprint(i)
 		exptids, err := root.GetExptByHashId(key)
 		if err != nil {
@@ -109,7 +111,14 @@ func main() {
 		}
 		for _, exptid := range exptids {
 			vid, msg, err := expts[exptid].Run(context.Background(), key)
-			fmt.Println(exptid, vid, msg, err)
+			key := fmt.Sprintf("%d_%d_%s_%v", exptid, vid, msg, err)
+			if _, ok := mstat[key]; ok {
+				mstat[key]++
+			} else {
+				mstat[key] = 1
+			}
 		}
 	}
+	fmt.Println("实验分流结果:")
+	spew.Dump(mstat)
 }
